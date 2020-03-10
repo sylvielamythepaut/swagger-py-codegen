@@ -23,6 +23,7 @@ from .flask import FlaskGenerator
 from .tornado import TornadoGenerator
 from .falcon import FalconGenerator
 from .sanic import SanicGenerator
+from .servicelib import ServiceLibGenerator
 from .parser import Swagger
 from .base import Template
 
@@ -181,6 +182,8 @@ def generate(destination, swagger_doc, force=False, package=None,
         generator = FalconGenerator(swagger)
     elif templates == 'sanic':
         generator = SanicGenerator(swagger)
+    elif templates == 'servicelib':
+        generator = ServiceLibGenerator(swagger)
     else:
         generator = FlaskGenerator(swagger)
     generator.with_spec = specification
