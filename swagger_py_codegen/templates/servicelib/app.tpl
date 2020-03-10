@@ -1,17 +1,17 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import
+[worker]
+autoreload = 1
+port = 8000
+serve_results = /var/cache/servicelib
 
-from flask import Flask
+[log]
+level = debug
+type = text
 
-import {{ blueprint }}
+[scratch]
+dirs = /var/cache/servicelib
+strategy = random
 
-
-def create_app():
-    app = Flask(__name__, static_folder='static')
-    app.register_blueprint(
-        {{ blueprint }}.bp,
-        url_prefix='{{ base_path }}')
-    return app
-
-if __name__ == '__main__':
-    create_app().run(debug=True)
+[results]
+class = http-files
+dirs = /var/cache/servicelib
+http_port = 8000
