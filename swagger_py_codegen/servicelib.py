@@ -9,16 +9,16 @@ import six
 SUPPORT_METHODS = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head']
 
 
-class Router(Code):
-    template = 'servicelib/routers.tpl'
-    dest_template = '%(package)s/%(module)s/routes.py'
-    override = True
+# class Router(Code):
+#     template = 'servicelib/routers.tpl'
+#     dest_template = '%(package)s/%(module)s/routes.py'
+#     override = False
     
 
 class View(Code):
     template = 'servicelib/view.tpl'
-    dest_template = '%(package)s/%(module)s/%(view)s.py'
-    override = False
+    dest_template = '%(package)s/%(module)s/%(package)s.py'
+    override = True
 
 
 class Specification(Code):
@@ -204,7 +204,7 @@ class ServiceLibGenerator(CodeGenerator):
 
     def _process(self):
         views = self._process_data()
-        yield Router(dict(views=views))
+        # yield Router(dict(views=views))
         for view in views:
             yield View(view, dist_env=dict(view=view['endpoint']))
         if self.with_spec:
@@ -218,7 +218,7 @@ class ServiceLibGenerator(CodeGenerator):
             swagger.pop('schemes', None)
             yield Specification(dict(swagger=json.dumps(swagger, indent=2)))
 
-        yield Validator()
+        # yield Validator()
 
         yield Api()
 

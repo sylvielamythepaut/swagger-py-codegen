@@ -8,11 +8,26 @@ from __future__ import absolute_import, unicode_literals
 
 def {{ method }}(context):
 
-{% endfor %}
+{%- endfor -%}
+
+ PARAM {{ params }}
+
+ {%- for method, ins in methods.items() %}
+
+    def {{ method.lower() }}(self{{ params.__len__() and ', ' or '' }}{{ params | join(', ') }}):
+        {%- for request in ins.requests %}
+        print(self.{{ request }})
+        {%- endfor %}
+
+        {% if 'response' in  ins -%}
+        return {{ ins.response.0 }}, {{ ins.response.1 }}, {{ ins.response.2 }}
+        {%- else %}
+        pass
+        {%- endif %}
+    {%- endfor -%}
 
 
-def hello(context, arg):
-    return "Hello, {}!".format(arg)
+
 
 
 def bonjour(context, *arg):
