@@ -48,6 +48,7 @@ class Blueprint(Code):
 class App(Code):
     template = 'servicelib/app.tpl'
     dest_template = '%(package)s/servicelib.ini'
+    override = True
 
 
 class Requirements(Code):
