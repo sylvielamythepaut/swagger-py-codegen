@@ -9,15 +9,15 @@ import six
 SUPPORT_METHODS = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head']
 
 
-# class Router(Code):
-#     template = 'servicelib/routers.tpl'
-#     dest_template = '%(package)s/%(module)s/routes.py'
-#     override = False
+class Router(Code):
+    template = 'servicelib/services.tpl'
+    dest_template = '%(package)s/%(package)s.py'
+    override = True
     
 
 class View(Code):
-    template = 'servicelib/view.tpl'
-    dest_template = '%(package)s/%(module)s/%(package)s.py'
+    template = 'servicelib/init.tpl'
+    dest_template = '%(package)s/__init__.py'
     override = True
 
 
@@ -36,8 +36,9 @@ class Validator(Code):
 
 
 class Api(Code):
-    template = 'servicelib/api.tpl'
-    dest_template = '%(package)s/%(module)s/__init__.py'
+    template = 'servicelib/DockerFile.tpl'
+    dest_template = '%(package)s/DockerFile'
+    override = True
 
 
 class Blueprint(Code):
@@ -46,7 +47,7 @@ class Blueprint(Code):
 
 
 class App(Code):
-    template = 'servicelib/app.tpl'
+    template = 'servicelib/serviceini.tpl'
     dest_template = '%(package)s/servicelib.ini'
     override = True
 
@@ -54,6 +55,7 @@ class App(Code):
 class Requirements(Code):
     template = 'servicelib/requirements.tpl'
     dest_template = 'requirements.txt'
+    override = True
 
 
 class UIIndex(Code):
@@ -74,11 +76,15 @@ def _swagger_to_servicelib_url(url, swagger_path_node):
 
     def _type(parameters):
         for p in parameters:
-            if p.get('in') != 'path':
-                continue
-            t = p.get('type', 'string')
-            if t in types:
-                yield '<%s>' % p['name'], '<%s:%s>' % (types[t], p['name'])
+            if p.get('in') == 'body':
+                print ('<%s>' % p["name"], '<%s:%s>' % (p["name"], p["name"]))
+                yield '<%s>' % p["name"], '<%s:%s>' % (p["name"], p["name"])
+            else:
+                if p.get('in') != 'path':
+                    continue
+                t = p.get('type', 'string')
+                if t in types:
+                    yield '<%s>' % p['name'], '<%s:%s>' % (types[t], p['name'])
 
     for method, param in six.iteritems(node):
         for old, new in _type(param.get('parameters', [])):
@@ -166,6 +172,7 @@ class ServiceLibGenerator(CodeGenerator):
         for paths, data in self.swagger.search(['paths', '*']):
             swagger_path = paths[-1]
             url, params = _swagger_to_servicelib_url(swagger_path, data)
+            print(params)
             endpoint = _path_to_endpoint(swagger_path)
             name = _path_to_resource_name(swagger_path)
 
@@ -205,7 +212,7 @@ class ServiceLibGenerator(CodeGenerator):
 
     def _process(self):
         views = self._process_data()
-        # yield Router(dict(views=views))
+        yield Router(dict(views=views))
         for view in views:
             yield View(view, dist_env=dict(view=view['endpoint']))
         if self.with_spec:
@@ -221,7 +228,7 @@ class ServiceLibGenerator(CodeGenerator):
 
         # yield Validator()
 
-        yield Api()
+        yield Api(dict(base_path=self.swagger.base_path))
 
         yield Blueprint(dict(scopes_supported=self.swagger.scopes_supported,
                              blueprint=self.swagger.module_name))

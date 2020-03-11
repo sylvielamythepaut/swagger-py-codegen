@@ -174,8 +174,9 @@ def generate(destination, swagger_doc, force=False, package=None,
             click.echo("Validation passed")
         except SwaggerValidationError as e:
             raise click.ClickException(str(e))
-    #print 'data             ',data
+    # print ('data             ',data)
     swagger = Swagger(data)
+    
     if templates == 'tornado':
         generator = TornadoGenerator(swagger)
     elif templates == 'falcon':
