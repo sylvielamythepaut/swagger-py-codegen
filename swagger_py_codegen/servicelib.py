@@ -230,8 +230,8 @@ class ServiceLibGenerator(CodeGenerator):
 
         yield Api(dict(base_path=self.swagger.base_path))
 
-        yield Blueprint(dict(scopes_supported=self.swagger.scopes_supported,
-                             blueprint=self.swagger.module_name))
+        # yield Blueprint(dict(scopes_supported=self.swagger.scopes_supported,
+        #                      blueprint=self.swagger.module_name))
         yield App(dict(blueprint=self.swagger.module_name,
                        base_path=self.swagger.base_path))
 
