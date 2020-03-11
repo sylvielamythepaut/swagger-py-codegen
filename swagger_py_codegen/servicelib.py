@@ -228,7 +228,7 @@ class ServiceLibGenerator(CodeGenerator):
 
         # yield Validator()
 
-        yield Api(dict(base_path=self.swagger.base_path))
+        yield Api(dict(module=self.swagger.module_name))
 
         # yield Blueprint(dict(scopes_supported=self.swagger.scopes_supported,
         #                      blueprint=self.swagger.module_name))
