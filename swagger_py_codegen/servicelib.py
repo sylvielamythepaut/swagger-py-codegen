@@ -11,6 +11,7 @@ SUPPORT_METHODS = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head']
 
 class Router(Code):
     template = 'servicelib/services.tpl'
+
     dest_template = '%(package)s/%(package)s.py'
     override = True
     
@@ -132,7 +133,7 @@ class ServiceLibGenerator(CodeGenerator):
     def __init__(self, swagger):
         super(ServiceLibGenerator, self).__init__(swagger)
         self.with_spec = False
-        self.with_ui = False
+        self.with_ui = True
 
 
     def _dependence_callback(self, code):
@@ -228,7 +229,7 @@ class ServiceLibGenerator(CodeGenerator):
 
         # yield Validator()
 
-        yield Api(dict(module=self.swagger.module_name))
+        yield Api(dict(module=self.package))
 
         # yield Blueprint(dict(scopes_supported=self.swagger.scopes_supported,
         #                      blueprint=self.swagger.module_name))

@@ -175,6 +175,7 @@ def generate(destination, swagger_doc, force=False, package=None,
         except SwaggerValidationError as e:
             raise click.ClickException(str(e))
     # print ('data             ',data)
+    data["package"] = package
     swagger = Swagger(data)
     
     if templates == 'tornado':
@@ -185,6 +186,7 @@ def generate(destination, swagger_doc, force=False, package=None,
         generator = SanicGenerator(swagger)
     elif templates == 'servicelib':
         generator = ServiceLibGenerator(swagger)
+        generator.package = package
     else:
         generator = FlaskGenerator(swagger)
     generator.with_spec = specification
