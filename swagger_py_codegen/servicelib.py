@@ -37,8 +37,8 @@ class Validator(Code):
 
 
 class Api(Code):
-    template = 'servicelib/DockerFile.tpl'
-    dest_template = '%(package)s/DockerFile'
+    template = 'servicelib/Dockerfile.tpl'
+    dest_template = '%(package)s/Dockerfile'
     override = True
 
 
