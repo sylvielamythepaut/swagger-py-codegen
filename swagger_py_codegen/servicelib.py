@@ -12,13 +12,13 @@ SUPPORT_METHODS = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head']
 class Router(Code):
     template = 'servicelib/services.tpl'
 
-    dest_template = '%(package)s/%(package)s.py'
+    dest_template = '%(package)s.py'
     override = True
     
 
 class View(Code):
     template = 'servicelib/init.tpl'
-    dest_template = '%(package)s/__init__.py'
+    dest_template = '__init__.py'
     override = True
 
 
@@ -38,7 +38,7 @@ class Validator(Code):
 
 class Api(Code):
     template = 'servicelib/Dockerfile.tpl'
-    dest_template = '%(package)s/Dockerfile'
+    dest_template = 'Dockerfile'
     override = True
 
 
@@ -49,7 +49,7 @@ class Blueprint(Code):
 
 class App(Code):
     template = 'servicelib/serviceini.tpl'
-    dest_template = '%(package)s/servicelib.ini'
+    dest_template = 'servicelib.ini'
     override = True
 
 
@@ -236,7 +236,7 @@ class ServiceLibGenerator(CodeGenerator):
         yield App(dict(blueprint=self.swagger.module_name,
                        base_path=self.swagger.base_path))
 
-        yield Requirements()
+        # yield Requirements()
 
         if self.with_ui:
             yield UIIndex(dict(spec_path='/static/%s/swagger.json' % self.swagger.module_name))

@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:experimental
 
 ARG base_tag
-ARG os
 
 
-FROM eccr-dev.ecmwf.int/servicelib/servicelib-${os}:${base_tag}
+
+FROM eccr-dev.ecmwf.int/servicelib/servicelib:${base_tag}
 
 # Copy the Python services code.
 COPY *.py /code/services/{{ module }}/
