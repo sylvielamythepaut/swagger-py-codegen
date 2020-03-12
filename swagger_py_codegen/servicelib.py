@@ -54,8 +54,8 @@ class App(Code):
 
 
 class Requirements(Code):
-    template = 'servicelib/requirements.tpl'
-    dest_template = 'requirements.txt'
+    template = 'servicelib/run.tpl'
+    dest_template = 'run'
     override = True
 
 
@@ -137,6 +137,7 @@ class ServiceLibGenerator(CodeGenerator):
 
 
     def _dependence_callback(self, code):
+
         if not isinstance(code, Schema):
             return code
         schemas = code
@@ -173,7 +174,6 @@ class ServiceLibGenerator(CodeGenerator):
         for paths, data in self.swagger.search(['paths', '*']):
             swagger_path = paths[-1]
             url, params = _swagger_to_servicelib_url(swagger_path, data)
-            print(params)
             endpoint = _path_to_endpoint(swagger_path)
             name = _path_to_resource_name(swagger_path)
 
@@ -216,16 +216,16 @@ class ServiceLibGenerator(CodeGenerator):
         yield Router(dict(views=views))
         for view in views:
             yield View(view, dist_env=dict(view=view['endpoint']))
-        if self.with_spec:
-            try:
-                import simplejson as json
-            except ImportError:
-                import json
-            swagger = {}
-            swagger.update(self.swagger.origin_data)
-            swagger.pop('host', None)
-            swagger.pop('schemes', None)
-            yield Specification(dict(swagger=json.dumps(swagger, indent=2)))
+        # if self.with_spec:
+        #     try:
+        #         import simplejson as json
+        #     except ImportError:
+        #         import json
+        #     swagger = {}
+        #     swagger.update(self.swagger.origin_data)
+        #     swagger.pop('host', None)
+        #     swagger.pop('schemes', None)
+        #     yield Specification(dict(swagger=json.dumps(swagger, indent=2)))
 
         # yield Validator()
 
@@ -233,10 +233,12 @@ class ServiceLibGenerator(CodeGenerator):
 
         # yield Blueprint(dict(scopes_supported=self.swagger.scopes_supported,
         #                      blueprint=self.swagger.module_name))
+        host = self.swagger
+       
         yield App(dict(blueprint=self.swagger.module_name,
-                       base_path=self.swagger.base_path))
+                       base_path=host))
 
-        # yield Requirements()
+        yield Requirements(dict(port=self.swagger.search(["host"])))
 
-        if self.with_ui:
-            yield UIIndex(dict(spec_path='/static/%s/swagger.json' % self.swagger.module_name))
+        # if self.with_ui:
+        #     yield UIIndex(dict(spec_path='/static/%s/swagger.json' % self.swagger.module_name))

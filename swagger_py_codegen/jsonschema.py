@@ -12,7 +12,7 @@ from .parser import RefNode
 
 class Schema(Code):
     template = 'jsonschema/schemas.tpl'
-    dest_template = '%(package)s/%(module)s/schemas.py'
+    dest_template = 'schemas.py'
     override = True
 
 
