@@ -12,7 +12,7 @@ from __future__ import absolute_import
 def {{ view.name.lower() }}(context, *args):
 	{%- for method, ins in view.methods.items() %}
     {% if 'response' in  ins -%}
-    return {{ ins.response.0 }}
+    return { "input" : args, "status" : "method {{ view.name.lower() }} to be implemented"} 
     {%- else %}
     pass
     {%- endif %}
